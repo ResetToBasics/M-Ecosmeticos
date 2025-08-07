@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../components/ui/Button';
 import Icon from '../../components/AppIcon';
 import useAdminProducts from '../../hooks/useAdminProducts';
+import useGlobalTimestamp from '../../hooks/useGlobalTimestamp';
+import SyncStatus from '../../components/SyncStatus';
 
 const AdminPanel = () => {
   const navigate = useNavigate();
@@ -10,6 +12,7 @@ const AdminPanel = () => {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [activeTab, setActiveTab] = useState('products');
   const { products, addProduct, updateProduct, deleteProduct } = useAdminProducts();
+  const { forceGlobalUpdate, currentTimestamp } = useGlobalTimestamp();
   const [siteSettings, setSiteSettings] = useState({
     siteName: 'M&E Fracionados',
     heroTitle: 'M&E Fracionados',
@@ -129,9 +132,12 @@ const AdminPanel = () => {
       <header className="bg-white shadow-sm border-b border-border">
         <div className="container-fluid">
           <div className="flex items-center justify-between h-16">
-            <h1 className="text-xl font-bold text-text-primary">
-              Painel Administrativo
-            </h1>
+            <div className="flex items-center space-x-4">
+              <h1 className="text-xl font-bold text-text-primary">
+                Painel Administrativo
+              </h1>
+              <SyncStatus />
+            </div>
             
             <div className="flex items-center space-x-4">
               <Button
@@ -142,7 +148,17 @@ const AdminPanel = () => {
               >
                 Ver Site
               </Button>
-              
+
+              <Button
+                variant="secondary"
+                onClick={forceGlobalUpdate}
+                iconName="RefreshCw"
+                iconPosition="left"
+                title="Forçar atualização em todos os dispositivos"
+              >
+                Atualizar Global
+              </Button>
+
               <Button
                 variant="outline"
                 onClick={handleLogout}
@@ -315,10 +331,16 @@ const ProductsManager = ({ products, onAdd, onUpdate, onDelete }) => {
 // Componente para gerenciar configurações
 const SettingsManager = ({ settings, onSave }) => {
   const [formData, setFormData] = useState(settings);
+  const { currentTimestamp, forceGlobalUpdate } = useGlobalTimestamp();
 
   const handleSave = () => {
     onSave(formData);
-    alert('Configurações salvas com sucesso!');
+    alert('Configurações salvas com sucesso! Todos os dispositivos serão notificados.');
+  };
+
+  const handleSaveAndUpdate = () => {
+    onSave(formData);
+    forceGlobalUpdate();
   };
 
   return (
@@ -402,7 +424,18 @@ const SettingsManager = ({ settings, onSave }) => {
           />
         </div>
 
-        <div className="pt-4">
+        {/* Informações de Timestamp */}
+        <div className="bg-gray-50 rounded-lg p-4">
+          <h4 className="font-medium text-text-primary mb-2">
+            Informações de Sincronização
+          </h4>
+          <div className="text-sm text-text-secondary space-y-1">
+            <p>Timestamp atual: {new Date(currentTimestamp).toLocaleString('pt-BR')}</p>
+            <p>Todas as alterações são sincronizadas automaticamente em tempo real</p>
+          </div>
+        </div>
+
+        <div className="pt-4 flex space-x-3">
           <Button
             variant="default"
             onClick={handleSave}
@@ -410,6 +443,16 @@ const SettingsManager = ({ settings, onSave }) => {
             iconPosition="left"
           >
             Salvar Configurações
+          </Button>
+
+          <Button
+            variant="secondary"
+            onClick={handleSaveAndUpdate}
+            iconName="RefreshCw"
+            iconPosition="left"
+            title="Salvar e forçar atualização imediata em todos os dispositivos"
+          >
+            Salvar e Atualizar Global
           </Button>
         </div>
       </div>

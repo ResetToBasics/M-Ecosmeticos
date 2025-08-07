@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useGlobalTimestamp from './useGlobalTimestamp';
 
 // Configurações padrão
 const defaultSettings = {
@@ -12,6 +13,7 @@ const defaultSettings = {
 
 export const useAdminSettings = () => {
   const [settings, setSettings] = useState(defaultSettings);
+  const { updateGlobalTimestamp } = useGlobalTimestamp();
 
   useEffect(() => {
     // Carregar configurações do localStorage
@@ -19,7 +21,9 @@ export const useAdminSettings = () => {
     if (savedSettings) {
       try {
         const parsedSettings = JSON.parse(savedSettings);
-        setSettings({ ...defaultSettings, ...parsedSettings });
+        // Extrair dados se estiver no novo formato com timestamp
+        const settingsData = parsedSettings.data || parsedSettings;
+        setSettings({ ...defaultSettings, ...settingsData });
       } catch (error) {
         console.error('Erro ao carregar configurações:', error);
         setSettings(defaultSettings);
@@ -29,8 +33,18 @@ export const useAdminSettings = () => {
 
   const updateSettings = (newSettings) => {
     const updatedSettings = { ...settings, ...newSettings };
+    const timestamp = Date.now();
+    const settingsWithTimestamp = {
+      data: updatedSettings,
+      _timestamp: timestamp,
+      _lastModified: timestamp
+    };
+
     setSettings(updatedSettings);
-    localStorage.setItem('admin_settings', JSON.stringify(updatedSettings));
+    localStorage.setItem('admin_settings', JSON.stringify(settingsWithTimestamp));
+
+    // Atualizar timestamp global para notificar outros dispositivos
+    updateGlobalTimestamp(timestamp);
   };
 
   return {

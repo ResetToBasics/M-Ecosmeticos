@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useGlobalTimestamp from './useGlobalTimestamp';
 
 // Produtos padrão (mock data)
 const defaultProducts = [
@@ -86,6 +87,7 @@ const defaultProducts = [
 
 export const useAdminProducts = () => {
   const [products, setProducts] = useState(defaultProducts);
+  const { updateGlobalTimestamp } = useGlobalTimestamp();
 
   useEffect(() => {
     // Carregar produtos do localStorage
@@ -93,7 +95,9 @@ export const useAdminProducts = () => {
     if (savedProducts) {
       try {
         const parsedProducts = JSON.parse(savedProducts);
-        setProducts(parsedProducts);
+        // Extrair dados se estiver no novo formato com timestamp
+        const productsData = parsedProducts.data || parsedProducts;
+        setProducts(Array.isArray(productsData) ? productsData : defaultProducts);
       } catch (error) {
         console.error('Erro ao carregar produtos:', error);
         setProducts(defaultProducts);
@@ -102,24 +106,41 @@ export const useAdminProducts = () => {
   }, []);
 
   const updateProducts = (newProducts) => {
+    const timestamp = Date.now();
+    const productsWithTimestamp = {
+      data: newProducts,
+      _timestamp: timestamp,
+      _lastModified: timestamp
+    };
+
     setProducts(newProducts);
-    localStorage.setItem('admin_products', JSON.stringify(newProducts));
+    localStorage.setItem('admin_products', JSON.stringify(productsWithTimestamp));
+
+    // Atualizar timestamp global para notificar outros dispositivos
+    updateGlobalTimestamp(timestamp);
   };
 
   const addProduct = (product) => {
     const newProduct = {
       ...product,
       id: Date.now(), // ID simples baseado em timestamp
-      pricePerMl: product.price / product.size
+      pricePerMl: product.price / product.size,
+      _createdAt: Date.now(),
+      _updatedAt: Date.now()
     };
     const updatedProducts = [...products, newProduct];
     updateProducts(updatedProducts);
   };
 
   const updateProduct = (id, updatedProduct) => {
-    const updatedProducts = products.map(product => 
-      product.id === id 
-        ? { ...updatedProduct, pricePerMl: updatedProduct.price / updatedProduct.size }
+    const updatedProducts = products.map(product =>
+      product.id === id
+        ? {
+            ...updatedProduct,
+            pricePerMl: updatedProduct.price / updatedProduct.size,
+            _updatedAt: Date.now(),
+            _createdAt: product._createdAt || Date.now()
+          }
         : product
     );
     updateProducts(updatedProducts);
