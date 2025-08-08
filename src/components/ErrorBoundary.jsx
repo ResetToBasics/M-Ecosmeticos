@@ -12,9 +12,11 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    error.__ErrorBoundary = true;
-    window.__COMPONENT_ERROR__?.(error, errorInfo);
-    // console.log("Error caught by ErrorBoundary:", error, errorInfo);
+    // REMOVEU as linhas problemáticas:
+    // error.__ErrorBoundary = true;
+    // window.__COMPONENT_ERROR__?.(error, errorInfo);
+    
+    console.log("Error caught by ErrorBoundary:", error, errorInfo);
   }
 
   render() {
@@ -45,8 +47,8 @@ class ErrorBoundary extends React.Component {
                 Back
               </button>
             </div>
-          </div >
-        </div >
+          </div>
+        </div>
       );
     }
 
