@@ -236,7 +236,7 @@ const ProductsManager = ({ products, onAdd, onUpdate, onDelete }) => {
     <div className="bg-white rounded-lg shadow-card p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold text-text-primary">
-          Gerenciar Produtos ({products.length})
+          Gerenciar Produtos ({products?.length || 0})
         </h2>
 
         <Button
@@ -271,7 +271,7 @@ const ProductsManager = ({ products, onAdd, onUpdate, onDelete }) => {
       )}
 
       <div className="space-y-4">
-        {products.map((product) => (
+        {(products || []).map((product) => (
           <div key={product.id} className="border border-border rounded-lg p-4 flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <img
@@ -314,7 +314,7 @@ const ProductsManager = ({ products, onAdd, onUpdate, onDelete }) => {
           </div>
         ))}
 
-        {products.length === 0 && (
+        {(!products || products.length === 0) && (
           <div className="text-center py-8 text-text-secondary">
             <Icon name="Package" size={48} className="mx-auto mb-4 opacity-50" />
             <p>Nenhum produto cadastrado</p>

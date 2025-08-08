@@ -40,7 +40,7 @@ const ProductCatalog = () => {
 
 
 
-  const filteredProducts = mockProducts?.filter(product => {
+  const filteredProducts = (mockProducts || [])?.filter(product => {
     // Search filter
     if (searchQuery) {
       const query = searchQuery?.toLowerCase();
@@ -58,7 +58,7 @@ const ProductCatalog = () => {
     return true;
   });
 
-  const sortedProducts = [...filteredProducts]?.sort((a, b) => {
+  const sortedProducts = [...(filteredProducts || [])]?.sort((a, b) => {
     switch (sortBy) {
       case 'price-low':
         return a?.price - b?.price;
