@@ -252,8 +252,13 @@ const ProductsManager = ({ products, onAdd, onUpdate, onDelete }) => {
       {showAddForm && (
         <ProductForm
           onSave={(product) => {
-            onAdd(product);
-            setShowAddForm(false);
+            if (typeof onAdd === 'function') {
+              onAdd(product);
+              setShowAddForm(false);
+            } else {
+              console.error('onAdd não é uma função:', onAdd);
+              alert('Erro ao adicionar produto. Tente recarregar a página.');
+            }
           }}
           onCancel={() => setShowAddForm(false)}
         />
@@ -263,8 +268,13 @@ const ProductsManager = ({ products, onAdd, onUpdate, onDelete }) => {
         <ProductForm
           product={editingProduct}
           onSave={(product) => {
-            onUpdate(editingProduct.id, product);
-            setEditingProduct(null);
+            if (typeof onUpdate === 'function') {
+              onUpdate(editingProduct.id, product);
+              setEditingProduct(null);
+            } else {
+              console.error('onUpdate não é uma função:', onUpdate);
+              alert('Erro ao atualizar produto. Tente recarregar a página.');
+            }
           }}
           onCancel={() => setEditingProduct(null)}
         />
@@ -283,7 +293,7 @@ const ProductsManager = ({ products, onAdd, onUpdate, onDelete }) => {
                 <h3 className="font-medium text-text-primary">{product.name}</h3>
                 <p className="text-sm text-text-secondary">{product.brand}</p>
                 <p className="text-sm text-primary font-medium">
-                  R$ {product.price.toFixed(2)} ({product.size}ml)
+                  R$ {product.price?.toFixed(2)} ({product.size}ml)
                 </p>
               </div>
             </div>
@@ -302,7 +312,12 @@ const ProductsManager = ({ products, onAdd, onUpdate, onDelete }) => {
                 size="sm"
                 onClick={() => {
                   if (confirm('Tem certeza que deseja excluir este produto?')) {
-                    onDelete(product.id);
+                    if (typeof onDelete === 'function') {
+                      onDelete(product.id);
+                    } else {
+                      console.error('onDelete não é uma função:', onDelete);
+                      alert('Erro ao excluir produto. Tente recarregar a página.');
+                    }
                   }
                 }}
                 iconName="Trash2"
