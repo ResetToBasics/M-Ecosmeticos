@@ -49,7 +49,7 @@ const SyncStatus = ({ className = '' }) => {
           color: 'text-green-500',
           bgColor: 'bg-green-50',
           borderColor: 'border-green-200',
-          text: 'Sincronizado',
+          text: '',
           pulse: false
         };
     }

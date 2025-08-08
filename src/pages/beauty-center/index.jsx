@@ -147,8 +147,6 @@ const BeautyCenter = () => {
                     sustentável e acessível.
                   </p>
                 </div>
-
-
               </div>
 
               {/* Imagem/Stats */}
@@ -188,8 +186,6 @@ const BeautyCenter = () => {
                     </div>
                   </div>
                 </div>
-
-
               </div>
             </div>
           </div>
@@ -226,15 +222,6 @@ const BeautyCenter = () => {
               <p className="text-sm text-white/80">
                 © {new Date().getFullYear()} {settings.siteName}. Todos os direitos reservados.
               </p>
-              <div className="mt-4">
-                <a
-                  href="/admin"
-                  className="text-xs text-white/40 hover:text-white/60 transition-colors"
-                  title="Painel Administrativo"
-                >
-                  Admin
-                </a>
-              </div>
             </div>
           </div>
         </div>

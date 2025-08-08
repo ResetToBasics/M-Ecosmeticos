@@ -140,24 +140,9 @@ const AdminPanel = () => {
             </div>
             
             <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                onClick={() => navigate('/')}
-                iconName="ExternalLink"
-                iconPosition="left"
-              >
-                Ver Site
-              </Button>
 
-              <Button
-                variant="secondary"
-                onClick={forceGlobalUpdate}
-                iconName="RefreshCw"
-                iconPosition="left"
-                title="Forçar atualização em todos os dispositivos"
-              >
-                Atualizar Global
-              </Button>
+
+
 
               <Button
                 variant="outline"
@@ -460,15 +445,7 @@ const SettingsManager = ({ settings, onSave }) => {
             Salvar Configurações
           </Button>
 
-          <Button
-            variant="secondary"
-            onClick={handleSaveAndUpdate}
-            iconName="RefreshCw"
-            iconPosition="left"
-            title="Salvar e forçar atualização imediata em todos os dispositivos"
-          >
-            Salvar e Atualizar Global
-          </Button>
+
         </div>
       </div>
     </div>
