@@ -12,8 +12,6 @@ const Header = () => {
     { name: 'Catálogo', path: '/product-catalog', icon: 'Package' }
   ];
 
-
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -39,7 +37,7 @@ const Header = () => {
               <img
                 src="/assets/images/logo1.svg"
                 alt="M&C Fracionados Logo"
-                className="h-24 lg:h-28 w-auto"
+                className="h-12 sm:h-16 md:h-20 lg:h-28 w-auto max-w-[150px] sm:max-w-[200px] lg:max-w-none"
               />
             </div>
           </Link>
@@ -76,7 +74,7 @@ const Header = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex items-center space-x-3 lg:hidden">
+          <div className="flex items-center space-x-2 lg:hidden">
             <Button
               variant="ghost"
               size="sm"
@@ -90,7 +88,7 @@ const Header = () => {
               onClick={toggleMenu}
               className="text-white hover:text-white/80"
             >
-              <Icon name={isMenuOpen ? "X" : "Menu"} size={24} />
+              <Icon name={isMenuOpen ? "X" : "Menu"} size={20} />
             </Button>
           </div>
         </div>
@@ -118,11 +116,9 @@ const Header = () => {
                 <span>{item?.name}</span>
               </Link>
             ))}
-
           </nav>
         </div>
       </div>
-
     </header>
   );
 };
